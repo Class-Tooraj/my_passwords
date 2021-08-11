@@ -94,9 +94,28 @@ def crypto(text: str, key: str) -> str:
 
 # CIPHER STRING DATA
 class Cipher:
+    """[Cipher String Data]
+    Simply Encode or Decode and Encrypt or Decrypt String
+
+    Raises:
+        init:
+            NameError: [Method Name If Not Exists]
+        update_method:
+            NameError: [Method Name If Not Exists]
+    """
     __METHODS: tuple[str, ...] = ('b64','ab64','mb64','eb64','lb64','rb64','rab64','rmb64','reb64','rlb64')
 
     def __init__(self, key: str = None, method: str = None, cipher_key: bool = True) -> None:
+        """[Initialize Cipher]
+
+        Args:
+            key (str, optional): [Crypto Key]. Defaults to None. 'None' mean only cipher.
+            method (str, optional): [Cipher Method]. Defaults to None. 'None' mean rmb64.
+            cipher_key (bool, optional): [Cipher Key]. Defaults to True. 'True' mean key to cipher key.
+
+        Raises:
+            NameError: [Method Name If Not Exist]
+        """
         if method is not None:
             if method not in self.__METHODS:
                 raise NameError(f'Method Name is Wrongs! All Method Supports \n\t{self.__METHODS}')
@@ -113,34 +132,92 @@ class Cipher:
         self.all_method_supports = lambda : ' - '.join(self.__METHODS)
 
     def update_method(self, method: str) -> None:
+        """[Update Cipher Method]
+
+        Args:
+            method (str): [Chose Method]
+
+        Raises:
+            NameError: [Method Name If Not Exist]
+        """
         if method not in self.__METHODS:
             raise NameError(f'Method Name is Wrongs! All Method Supports \n\t{self.__METHODS}')
         self.__cipher = method
 
     def update_key(self, key: str, cipher_key: bool = True) -> None:
+        """[Update Crypto Key]
+
+        Args:
+            key (str): [Key]
+            cipher_key (bool, optional): [Cipher Key]. Defaults to True. 'True' mean key to cipher key.
+        """
         self.__key = self.cipher_encode('mb64', key) if cipher_key is True else key
 
     def encode(self, inp: str) -> str:
-        inp = self.__crypt(inp, self.__key)
+        """[Encode - Cipher or Encrypt and Cipher]
+
+        Args:
+            inp (str): [input string]
+
+        Returns:
+            str: [encoded string]
+        """
+        if self.__key:
+            inp = self.__crypt(inp, self.__key)
         return self.cipher_encode(self.__cipher, inp)
 
     def decode(self, inp: str) -> str:
+        """[Decode - Cipher or Cipher and Decrypt]
+
+        Args:
+            inp (str): [input Cipher]
+
+        Returns:
+            str: [source string]
+        """
         inp = self.cipher_decode(self.__cipher, inp)
-        return self.__crypt(inp, self.__key)
+        return self.__crypt(inp, self.__key) if self.__key is not False else inp
 
     @ staticmethod
     def cipher_encode(ci: str, inp: str) -> str:
+        """[Cipher Encoder]
+
+        Args:
+            ci (str): [method name]
+            inp (str): [input string]
+
+        Returns:
+            str: [encoded string]
+        """
         ex = f"nested_cipher.{ci}_encode"
         ex = eval(ex)
         return ex(inp.encode('utf-8')).decode('ascii')
 
     @ staticmethod
     def cipher_decode(ci: str, inp: str) -> str:
+        """[Cipher Decoder]
+
+        Args:
+            ci (str): [method name]
+            inp (str): [input cipher]
+
+        Returns:
+            str: [source string]
+        """
         ex = f"nested_cipher.{ci}_decode"
         ex = eval(ex)
         return ex(inp.encode('ascii')).decode('utf-8')
 
     @ staticmethod
-    def __crypt(t: str, k: str) -> str:
-        return crypto(t, k)
+    def __crypt(txt: str, key: str) -> str:
+        """[Encrypt or Decrypt]
+
+        Args:
+            txt (str): [String]
+            key (str): [Key]
+
+        Returns:
+            str: [Encrypt Or Decrypt String]
+        """
+        return crypto(txt, key)
 
