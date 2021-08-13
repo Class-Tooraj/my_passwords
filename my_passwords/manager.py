@@ -29,8 +29,9 @@ def key_maker(length: int = None, chars: str = None, skip: Iterable[str] = None)
     length = 32 if length is None else length
 
     if skip:
-        for i in skip:
-            chars = chars.replace(i, '')
+        skip = set(skip)
+        chars = set(chars).difference(skip)
+        chars = ''.join(chars)
 
     _idx = (random.choice(chars) for _ in range(0, length))
 
