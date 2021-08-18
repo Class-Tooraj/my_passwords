@@ -4,13 +4,18 @@ __email__ = "Toorajjahangiri@gmail.com"
 ###########################################
 
 # IMPORT
+import os
+import sqlite3
 import random
+import hashlib
+
+from datetime import datetime
 
 # IMPORT NESTED CIPHER
 import nested_cipher
 
 # TYPE IMPORT
-from typing import Iterable, Iterator
+from typing import Callable, Iterable, Iterator, Union
 
 
 # KEY
@@ -103,6 +108,8 @@ class Cipher:
         update_method:
             NameError: [Method Name If Not Exists]
     """
+    VERSION: str = "0.1"
+
     __METHODS: tuple[str, ...] = ('b64','ab64','mb64','eb64','lb64','rb64','rab64','rmb64','reb64','rlb64')
 
     def __init__(self, key: str = None, method: str = None, cipher_key: bool = True) -> None:
@@ -221,3 +228,295 @@ class Cipher:
         """
         return crypto(txt, key)
 
+# MANAGER
+class Manager:
+    """[Simple Password Manager]
+    Use Sqlite3 Data Base
+    """
+    VERSION: str = "0.1"
+
+    NOW: Callable = lambda _: datetime.now()
+    HASH: Callable = lambda _,x: hashlib.sha256(x) if isinstance(x, bytes) else hashlib.sha256(x.encode('utf-8'))
+    METHOD: str = 'rmb64'
+
+    def __init__(self, path: str, user_name: str, password: str) -> None:
+        """[Initialize]
+
+        Args:
+            path (str): [Data Base Path]
+            user_name (str): [UserName]
+            password (str): [Password]
+
+        Raises:
+            Sqlite_ERROR: [Data Base Error]
+        """
+        self.__path = os.path.realpath(path) if path != ':memory:' else path
+        if user_name == password:
+            print("ACCOUNT ERR --> 'USER_NAME' and 'PASSWORD' should not be the same !")
+            exit()
+
+        if len(password) < 6:
+            print("ACCOUNT ERR --> 'PASSWORD' length must be at least '6' characters !")
+            exit()
+
+        password = self.HASH(password).hexdigest()
+        self.__account = (user_name, password)
+
+        try:
+            self.__db = sqlite3.connect(self.__path)
+        except (sqlite3.Error, BaseException) as err:
+            raise err
+
+        self.__commit = self.__db.commit
+        self.__cipher = Cipher(crypto(password, user_name), self.METHOD)
+        self.__initialize()
+
+        if self.__init_data:
+            safe_key = crypto(self.__init_data['KEY'][0], password)
+            self.__cipher.update_key(safe_key)
+        else:
+            print("ACCOUNT_ERROR --> 'USER_NAME' or 'PASSWORD' is 'WRONG' !!")
+            exit()
+
+    def __initialize(self) -> int:
+        """
+        Initialize Data Check if First Run or Data Base Is First Run
+        Other Get Init Data From Data Base
+        """
+        tbl_app = """CREATE TABLE IF NOT EXISTS App (
+                                    id integer PRIMARY KEY,
+                                    Name text NOT NULL,
+                                    Data text NOT NULL,
+                                    LastUpdate timestamp
+                                    );"""
+        tbl_pass = """CREATE TABLE IF NOT EXISTS Password (
+                                    id integer PRIMARY KEY,
+                                    Name text NOT NULL,
+                                    Password text NOT NULL,
+                                    URL text,
+                                    More text,
+                                    SetTime timestamp NOT NULL,
+                                    LastUpdate timestamp
+                                    );"""
+
+        c_script = "SELECT name FROM sqlite_master WHERE type='table' AND name= ?;"
+        check = [
+            len(self.__db.execute(c_script, ('App',)).fetchall()) > 0,
+            len(self.__db.execute(c_script, ('Password',)).fetchall()) > 0,
+        ]
+        if all(check):
+            init_data = self.__db.execute("SELECT Data FROM 'App' WHERE (name= ?)", ('init',)).fetchone()[0]
+            init_data = self.__cipher.decode(init_data)
+            if self.__account[0] in init_data:
+                self.__init_data = eval(init_data)
+                return 0
+            else:
+                self.__init_data = None
+                return -1
+        else:
+            _key: str = key_maker(64)
+            _key: str = crypto(_key, self.__account[1])
+            init_data = {
+                self.__account[0]: self.__account[1], 
+                'KEY': [_key]
+            }
+
+            init_data = self.__cipher.encode(format(init_data))
+            self.__db.execute(tbl_app)
+            self.__db.execute(tbl_pass)
+
+            self.__db.execute("INSERT INTO App VALUES(?,?,?,?)", (0, 'init', init_data, self.NOW()))
+            self.__commit()
+
+            self.__initialize()
+
+            return 1
+
+    def last_id(self, table: str) -> int:
+        """[Last ID From Table]
+
+        Args:
+            table (str): [Table Name]
+
+        Returns:
+            int: [Maximum ID Exists in Table]
+        """
+        max_id = self.__db.execute(f'SELECT max(id) FROM {table}').fetchone()[0]
+        if max_id is None:
+            return 0
+        return max_id
+
+    def exists(self, name: str) -> bool:
+        """[Exists Name In Data Base]
+
+        Args:
+            name (str): [Name For Check]
+
+        Returns:
+            bool: [If Exists True Else False]
+        """
+        get = self.__db.execute(f"SELECT * FROM 'Password' WHERE (Name= ?)", (name,)).fetchall()
+        return True if len(get) > 0 else False
+
+    def add_pass(self, name: str, password: str, url: str = None, more: str = None) -> bool:
+        """[Add Password In data Base]
+
+        Args:
+            name (str): [Name Password]
+            password (str): [Password]
+            url (str, optional): [URL or Account or other txt | Optional]. Defaults to None.
+            more (str, optional): [More Detail or Info | Optional]. Defaults to None.
+
+        Returns:
+            bool: [If Set To db True Else False]
+        """
+        if not self.exists(name):
+            _id = self.last_id('Password') + 1
+            url = '' if url is None else self.__cipher.encode(url)
+            more = '' if more is None else self.__cipher.encode(more)
+            password = self.__cipher.encode(password)
+            now = self.NOW()
+            data = (_id, name, password, url, more, now, now)
+            self.__db.execute("INSERT INTO Password VALUES(?,?,?,?,?,?,?)", data)
+            self.__commit()
+            return True
+        else:
+            return False
+
+    def get_pass(self, name: str, ret: str = 'all') -> str:
+        """[Get Password From Data Base]
+
+        Args:
+            name (str): [Name Password]
+            ret (str, optional): [Return Data]. Defaults to 'all'.
+                ret :: 'all, id, name, password, url, more, settime, lastupdate'
+                Example ret : 'id, name, password'
+        Returns:
+            str: [String Result]
+        """
+        _ret = {
+            'all': '-A-', 'id': 'id', 'name': 'Name', 'password': 'Password', 'url': 'URL', 'more': 'More', 'settime': 'SetTime', 'lastupdate': 'LastUpdate'
+            }
+        idx_name = ['id', 'Name', 'Password', 'URL', 'More', 'SetTime', 'LastUpdate']
+        ret = _ret[ret.lower()] if ',' not in ret else [_ret[i.lower()] for i in ret.split(',')]
+
+        get = self.__db.execute(f"SELECT * FROM 'Password' WHERE (Name= ?)", (name,)).fetchone()
+        result = {}
+        for n, i in enumerate(get):
+            if 1 < n < 5 and i != '':
+                result[idx_name[n]] = self.__cipher.decode(i)
+            else:
+                result[idx_name[n]] = i
+        if ret != '-A-':
+            return ','.join([result[i] for i in ret]) if isinstance(ret, list) else result[ret]
+        else:
+            return ','.join(str(i) for i in result.values())
+
+    def update_pass(self, name: str, password: str = None, url: str = None, more: str = None) -> bool:
+        """
+        [Update or Replace Data In data Base]
+
+        Args:
+            name (str): [Name Password]
+            password (str, optional): [Password]. Defaults to None.
+            url (str, optional): [URL or Account or other txt | Optional]. Defaults to None.
+            more (str, optional): [More Detail or Info | Optional]. Defaults to None.
+
+        Returns:
+            bool: [If Set To db True Else False]
+        """
+        enc = self.__cipher.encode
+        scr = """
+            UPDATE OR REPLACE Password
+            SET Password=:password, URL=:url, More=:more, LastUpdate=:lu
+            WHERE id=:id and Name=:name;
+            """
+        if self.exists(name):
+            get = self.__db.execute(f"SELECT * FROM 'Password' WHERE (Name= ?)", (name,)).fetchone()
+            upd = {
+                'id': get[0],
+                'name': get[1],
+                'password': enc(password) if password is not None else get[2],
+                'url': enc(url) if url is not None else get[3],
+                'more': enc(more) if more is not None else get[4],
+                'lu': self.NOW(),
+            }
+            self.__db.execute(scr, upd)
+            self.__commit()
+            return True
+        return False
+
+    def del_pass(self, name: str, secure: bool = True) -> bool:
+        """[Delete Password]
+
+        Args:
+            name (str): [Name For Delete Row]
+            secure (bool, optional): [Secure replace Data With Random Data First And Then Delete]. Defaults to True.
+        Returns:
+            bool: [If Deleted True Else False]
+        """
+        if not self.exists(name):
+            return False
+        if secure:
+            self.update_pass(name, key_maker(32), key_maker(10), key_maker(20))
+            self.__commit()
+
+        _id, = self.__db.execute("SELECT id FROM Password WHERE (Name= ?)", (name,)).fetchone()
+
+        self.__db.execute("DELETE FROM Password WHERE id= ? and Name= ?", (_id, name))
+        self.__commit()
+
+        return True if not self.exists(name) else False
+
+    def counter_password(self) -> int:
+        """[Conter Password]
+
+        Returns:
+            int: [How Many Row In Password Table]
+        """
+        return self.__db.execute("SELECT COUNT(*) FROM Password").fetchone()[0]
+
+    def reset(self, mode: int = 1) -> bool:
+        """[Reset Data Base]
+
+        Args:
+            mode (int, optional): [Reset Mode Valid (1, 2)]. Defaults to 1.
+                mode 1 : Delete All Password And Clear Table
+                mode 2 : Delete All Data From Data Base And Remove Data Base file
+
+        Returns:
+            bool: [True If Not is Wrong Else False]
+        """
+        modes = (1, 2)
+        if mode == 1:
+            try:
+                self.__db.execute("DELETE FROM 'Password';")
+                self.__commit()
+
+                return True if self.counter_password() == 0 else False
+            except (BaseException, Exception) as err:
+                print(f"{err}")
+                return False
+
+        elif mode == 2:
+            rs_pass = self.reset(1)
+            if rs_pass is True:
+                try:
+                    self.__db.execute("DELETE FROM 'App';")
+                    self.__commit()
+                    self.__db.close()
+
+                    if self.__path != ":memory:":
+                        os.remove(self.__path)
+                    return True
+                except (BaseException, Exception, FileExistsError, FileNotFoundError) as err:
+                    print(f"{err}")
+                    return False
+            else:
+                return False
+        else:
+            print(f"Mode {mode} is Not Exists - Chose {modes}")
+            return False
+
+
+__dir__ = ('key_maker', 'crypto', 'Cipher', 'Manager')
