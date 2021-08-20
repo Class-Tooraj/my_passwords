@@ -49,7 +49,7 @@ def main(argv: list[str]) -> int:
     command = ('add', 'get', 'up', 'del', 'reset', 'count', 'exists', 'removeall')
     ret_c = ('all', 'id', 'name', 'password', 'url', 'more', 'settime', 'lastupdate')
     ci_m = ('b64','ab64','mb64','eb64','lb64','rb64','rab64','rmb64','reb64','rlb64')
-    dfa = {'cipher': 'rmb64', 'database': './test/db.mps', 'ret': 'password'}
+    dfa = {'cipher': 'rmb64', 'database': './data/db.mps', 'ret': 'password'}
     argument_parse = argparse.ArgumentParser(prog="MyPasswords", description="Simple Password Manager")
 
     # Add Arguments
