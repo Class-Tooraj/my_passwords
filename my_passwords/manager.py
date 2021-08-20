@@ -406,7 +406,10 @@ class Manager:
             if 1 < n < 5 and i != '':
                 result[idx_name[n]] = self.__cipher.decode(i)
             else:
-                result[idx_name[n]] = i
+                if i == '':
+                    result[idx_name[n]] = 'None'
+                else:
+                    result[idx_name[n]] = i
         if ret != '-A-':
             return ','.join([result[i] for i in ret]) if isinstance(ret, list) else result[ret]
         else:
