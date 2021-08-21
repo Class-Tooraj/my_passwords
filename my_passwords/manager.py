@@ -15,8 +15,7 @@ from datetime import datetime
 import nested_cipher
 
 # TYPE IMPORT
-from typing import Callable, Iterable, Iterator, Union
-
+from typing import Callable, Iterable, Iterator
 
 # KEY
 def key_maker(length: int = None, chars: str = None, skip: Iterable[str] = None) -> str:
@@ -233,7 +232,7 @@ class Manager:
     """[Simple Password Manager]
     Use Sqlite3 Data Base
     """
-    VERSION: str = "0.1"
+    VERSION: str = "0.2"
 
     NOW: Callable = lambda _: datetime.now()
     HASH: Callable = lambda _,x: hashlib.sha256(x) if isinstance(x, bytes) else hashlib.sha256(x.encode('utf-8'))
@@ -520,6 +519,17 @@ class Manager:
         else:
             print(f"Mode {mode} is Not Exists - Chose {modes}")
             return False
+    
+    def close(self) -> None:
+        """[Close]
+        """
+        self.__path = None
+        self.__account = None
+        self.__cipher = None
+        self.__init_data = None
+        self.__db.close()
+        self.__db = None
+        self.__commit = None
 
 
 __dir__ = ('key_maker', 'crypto', 'Cipher', 'Manager')
