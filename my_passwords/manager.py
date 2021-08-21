@@ -520,6 +520,9 @@ class Manager:
             print(f"Mode {mode} is Not Exists - Chose {modes}")
             return False
     
+    def get_all_name(self) -> Iterable:
+        return self.__db.execute("SELECT name FROM Password").fetchall()
+
     def close(self) -> None:
         """[Close]
         """
