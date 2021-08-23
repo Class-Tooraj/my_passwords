@@ -62,7 +62,7 @@ def test_manager(user:str, password: str) -> bool:
         return False
 
 # TEST ACCOUNT UPDATE
-def test_account_update(user: str, password: str, new_user: str, new_password: str, db_size: int = 30, path: str = None) -> bool:
+def test_account_update(user: str, password: str, new_user: str, new_password: str, old_method: str = None, new_method: str = None, db_size: int = 30, path: str = None) -> bool:
     path = './test/t.db' if path is None else path
     def make() -> bool:
         m_val = ((f'Name_{i}', f'Password_{i}', f'URL_{i}', f'More_{i}') for i in range(0, db_size))
@@ -74,7 +74,7 @@ def test_account_update(user: str, password: str, new_user: str, new_password: s
         return all(tmp)
     mk_db = make()
     if mk_db is True:
-        return account_update(path, user, password, new_user, new_password)[0]
+        return account_update(path, user, password, new_user, new_password, old_method, new_method)[0]
     else:
         return False
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     print(f"{'':>5}Cipher :: {t_ci}", end='\n\n')
     t_ma = test_manager('test', '*TEST*')
     print(f"{'':>5}Manager :: {t_ma}", end='\n\n')
-    t_au = test_account_update('test', '*TEST*', 'NEW_USER', '**NEW_PASSWORD**', 60, None)
+    t_au = test_account_update('test', '*TEST*', 'NEW_USER', '**NEW_PASSWORD**', 'rmb64', 'mb64', 16, None)
     print(f"{'':>5}AccountUpdate :: {t_au}", end='\n\n')
 
     print(f"{'':>5}->    DONE    <-", end='\n')
