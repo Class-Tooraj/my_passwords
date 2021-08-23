@@ -521,7 +521,7 @@ class Manager:
             return False
     
     def get_all_name(self) -> Iterable:
-        return self.__db.execute("SELECT name FROM Password").fetchall()
+        return (i[0] for i in self.__db.execute("SELECT name FROM Password").fetchall())
 
     def close(self) -> None:
         """[Close]
@@ -535,4 +535,61 @@ class Manager:
         self.__commit = None
 
 
-__dir__ = ('key_maker', 'crypto', 'Cipher', 'Manager')
+# USER NAME OR PASSWORD CHANGER
+def account_update(path: str, old_username: str, old_password: str, new_username: str, new_password: str) -> tuple[bool, str]:
+    """[Update User Name Or Password]
+    Manager DataBase is Encrypted All Data With Generated Key Xor By UserName And Password
+    Update Account Make New DataBase And Add All Password One By One Decrypted and New Crypting
+    And Replace Old DataBase With New DataBase
+    This Progres is Slow
+
+    Args:
+        path (str): [DataBase Path]
+        old_username (str): [UserName]
+        old_password (str): [Password]
+        new_username (str): [New UserName]
+        new_password (str): [New Password]
+
+    Returns:
+        tuple[bool, str]: [return bool and string details]
+    """
+    if old_password == new_password:
+        return False, 'NewPassword is OldPassword !'
+
+    r_path = os.path.realpath(path)
+    l_path = os.path.split(r_path)
+    new_path = os.path.join(l_path[0], 'acu.tm')
+
+    _old_man = Manager(path, old_username, old_password)
+    count_passwords: int = _old_man.counter_password()
+    def _old_db(man: Manager) -> Iterator:
+        read_db = man.get_all_name()
+        for i in read_db:
+            yield man.get_pass(i, 'name,password,url,more')
+        man.close()
+    read_old_db = _old_db(_old_man)
+    del _old_man
+
+    new_db = Manager(new_path, new_username, new_password)
+    add_new = (new_db.add_pass(*i.split(',')) for i in read_old_db)
+    pr: int = 16 if count_passwords >= 60 else 4
+    progres: tuple[str, int] = (':', abs(count_passwords // pr))
+    count = 0
+
+    print('|', end='', flush=True)
+    for _ in add_new:
+        count += 1
+        if count == progres[-1]:
+            print(':', end='', flush=True)
+            count = 0
+
+    _add_counter  = new_db.counter_password()
+    _res = f'ALL {count_passwords} - ADD {_add_counter}'
+    new_db.close()
+    os.remove(r_path)
+    os.rename(new_path, r_path)
+    print('| - 100% |DONE', flush=True)
+    return (True, _res) if _add_counter == count_passwords else (False, _res)
+
+
+__dir__ = ('key_maker', 'crypto', 'Cipher', 'Manager', 'account_update')
