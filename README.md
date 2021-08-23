@@ -57,8 +57,10 @@ Data is Encrypted and Secured With Nested Cipher Based on Base64 URL Safe
 > > **(--return, -r)** return for *get* command - *default* 'password'
 > >
 > > > (all, id, name, password, url, more, settime, lastupdate)
-> > >
-> > > **customize return example** *name,password,lastupdate* 
+> >
+> > **(--custom_return, -cr)** mix some return
+> >
+> > > **mix return order Example** *name,password,lastupdate*
 > >
 > > **(--database, -db)**  database file - *default* './data/db.mp'
 > >
