@@ -33,10 +33,20 @@ Data is Encrypted and Secured With Nested Cipher Based on Base64 URL Safe
 > > > **reset**  clear all password and password table is empty - bool
 > > >
 > > > **removeall** clear database and delete database file
+> > >
+> > > **accup** update account username or password or method or all
 >
 > **Options :**
 >
-> > **(--name, -n)**  password name - Required is True
+> > **(--new_username, -nu)** account update change username to new user name
+> >
+> > **(--new_password, -np)** account update change password to new password
+> >
+> > **(--new_cipher_method, -ncm)** account update cipher to new cipher method
+> >
+> > > check *cipher_method* options for more detail
+> >
+> > **(--name, -n)**  password name - If *add* or *get* or *update* or *del* Required is True
 > >
 > > **(--password, -p)** password - If *add* command Required is True
 > >
@@ -60,4 +70,4 @@ Data is Encrypted and Secured With Nested Cipher Based on Base64 URL Safe
 
 ---
 
-author: **Tooraj Jahangiri** version: **0.1**
+author: **Tooraj Jahangiri** version: **0.2**
