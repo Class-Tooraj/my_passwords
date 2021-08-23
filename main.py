@@ -15,6 +15,9 @@ import my_passwords
 
 # PASSWORD
 def password_man(cmd: dict) -> Union[bool, int, str]:
+    if cmd['Command'] == 'accup':
+        return my_passwords.account_update(cmd['database'], cmd['Username'], cmd['Password'], cmd['new_username'], cmd['new_password'], cmd['cipher_method'], cmd['new_cipher_method'])
+
     mng = my_passwords.Manager
     mng.METHOD = cmd['cipher_method']
     mng = mng(cmd['database'], cmd['Username'], cmd['Password'])
@@ -46,7 +49,7 @@ def password_man(cmd: dict) -> Union[bool, int, str]:
 
 # MAIN FUNCTION
 def main(argv: list[str]) -> int:
-    command = ('add', 'get', 'up', 'del', 'reset', 'count', 'exists', 'removeall')
+    command = ('add', 'get', 'up', 'del', 'reset', 'count', 'exists', 'removeall', 'accup')
     ret_c = ('all', 'id', 'name', 'password', 'url', 'more', 'settime', 'lastupdate')
     ci_m = ('b64','ab64','mb64','eb64','lb64','rb64','rab64','rmb64','reb64','rlb64')
     dfa = {'cipher': 'rmb64', 'database': './data/db.mps', 'ret': 'password'}
@@ -56,7 +59,10 @@ def main(argv: list[str]) -> int:
     argument_parse.add_argument('Username', type= str, help= 'Your User Name')
     argument_parse.add_argument('Password', type= str, help= 'Your Password')
     argument_parse.add_argument('Command', choices=command, help= 'What to do !?')
-    argument_parse.add_argument('--name', '-n', required= True, type= str, help= 'Password Name')
+    argument_parse.add_argument('--new_username', '-nu', type= str, help= 'New User Name')
+    argument_parse.add_argument('--new_password', '-np', type= str, help= 'New Password')
+    argument_parse.add_argument('--new_cipher_method', '-ncm', choices= ci_m, type= str, help= 'New Method')
+    argument_parse.add_argument('--name', '-n', type= str, help= 'Password Name')
     argument_parse.add_argument('--password', '-p', type= str, help= 'Password')
     argument_parse.add_argument('--url', '-u', type= str, help= 'Set URL for this Password')
     argument_parse.add_argument('--more', '-m', type= str, help= 'Set More Info for This Password')
