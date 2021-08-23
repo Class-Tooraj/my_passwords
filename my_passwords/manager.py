@@ -536,7 +536,7 @@ class Manager:
 
 
 # USER NAME OR PASSWORD CHANGER
-def account_update(path: str, old_username: str, old_password: str, new_username: str, new_password: str) -> tuple[bool, str]:
+def account_update(path: str, old_username: str, old_password: str, new_username: str, new_password: str, old_method: str = None, new_method: str = None) -> tuple[bool, str]:
     """[Update User Name Or Password]
     Manager DataBase is Encrypted All Data With Generated Key Xor By UserName And Password
     Update Account Make New DataBase And Add All Password One By One Decrypted and New Crypting
@@ -560,7 +560,10 @@ def account_update(path: str, old_username: str, old_password: str, new_username
     l_path = os.path.split(r_path)
     new_path = os.path.join(l_path[0], 'acu.tm')
 
-    _old_man = Manager(path, old_username, old_password)
+    old_method = 'rmb64' if old_method is None else old_method
+    _old_man = Manager
+    _old_man.METHOD = old_method
+    _old_man = _old_man(path, old_username, old_password)
     count_passwords: int = _old_man.counter_password()
     def _old_db(man: Manager) -> Iterator:
         read_db = man.get_all_name()
@@ -570,7 +573,10 @@ def account_update(path: str, old_username: str, old_password: str, new_username
     read_old_db = _old_db(_old_man)
     del _old_man
 
-    new_db = Manager(new_path, new_username, new_password)
+    new_method = 'rmb64' if new_method is None else new_method
+    new_db = Manager
+    new_db.METHOD = new_method
+    new_db = new_db(new_path, new_username, new_password)
     add_new = (new_db.add_pass(*i.split(',')) for i in read_old_db)
     pr: int = 16 if count_passwords >= 60 else 4
     progres: tuple[str, int] = (':', abs(count_passwords // pr))
