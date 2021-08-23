@@ -18,6 +18,9 @@ def password_man(cmd: dict) -> Union[bool, int, str]:
     if cmd['Command'] == 'accup':
         return my_passwords.account_update(cmd['database'], cmd['Username'], cmd['Password'], cmd['new_username'], cmd['new_password'], cmd['cipher_method'], cmd['new_cipher_method'])
 
+    if cr := cmd.get('custom_return'):
+        cmd['return'] = cr
+
     mng = my_passwords.Manager
     mng.METHOD = cmd['cipher_method']
     mng = mng(cmd['database'], cmd['Username'], cmd['Password'])
@@ -67,6 +70,7 @@ def main(argv: list[str]) -> int:
     argument_parse.add_argument('--url', '-u', type= str, help= 'Set URL for this Password')
     argument_parse.add_argument('--more', '-m', type= str, help= 'Set More Info for This Password')
     argument_parse.add_argument('--return', '-r', choices=ret_c, default=dfa['ret'] ,type= str, help= 'Return Get')
+    argument_parse.add_argument('--custom_return', '-cr',type= str, help= 'Return Get')
     argument_parse.add_argument('--database', '-db', default=dfa['database'],type= str, help= 'Data Base Path')
     argument_parse.add_argument('--cipher_method', '-cm', choices= ci_m, default= dfa['cipher'], type= str, help= 'Chose Cipher Method')
 
