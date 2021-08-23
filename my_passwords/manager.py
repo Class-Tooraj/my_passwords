@@ -410,7 +410,7 @@ class Manager:
                 else:
                     result[idx_name[n]] = i
         if ret != '-A-':
-            return ','.join([result[i] for i in ret]) if isinstance(ret, list) else result[ret]
+            return ','.join([str(result[i]) for i in ret]) if isinstance(ret, list) else result[ret]
         else:
             return ','.join(str(i) for i in result.values())
 
