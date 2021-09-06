@@ -74,7 +74,7 @@ class Setting:
 # CONSOLE APP CODE
 def app_password_manager(_act_db: tuple = None) -> int:
     _CLEAR()
-    print('\tPASSWORD MANAGER APP [VERSION 0.1]\n\n')
+    print('PASSWORD MANAGER APP [VERSION 0.1]')
     _manager = my_passwords.Manager
     _menu = (
         "\n\n",
@@ -101,8 +101,8 @@ def app_password_manager(_act_db: tuple = None) -> int:
         _password = str(input('PASSWORD /> '))
     _manager.METHOD = _method
     _manager = _manager(_path, _username, _password)
-    print(f'... DATA BASE [{_path}] IS ACTIVE ...')
-    print('\n\n')
+    print(f'\n\t< DATA BASE [{os.path.basename(_path)}] IS ACTIVE >')
+    print("\t------------------------------------------------------")
     print('\n'.join(_menu))
     _running = True
     while _running:
@@ -200,7 +200,9 @@ def app_password_manager(_act_db: tuple = None) -> int:
                 print("RESET IS CANCELD")
         elif _inp in ('-1', 'cls', 'clear'):
             _CLEAR()
-            print('\tPASSWORD MANAGER APP [VERSION 0.1]\n\n')
+            print('PASSWORD MANAGER APP [VERSION 0.1]')
+            print(f'\n\t< DATA BASE [{os.path.basename(_path)}] IS ACTIVE >')
+            print("\t------------------------------------------------------")
             print('\n'.join(_menu))
         else:
             print('The Order Not Existed in Valid Order ! [Please Set Number For Command]')
@@ -210,16 +212,17 @@ def app_password_manager(_act_db: tuple = None) -> int:
 # KEY GENERATOR
 def app_key_gen() -> int:
     _CLEAR()
-    print("KEY GENERATOR [VERSION 0.1]\n\n")
+    print("KEY GENERATOR [VERSION 0.1]")
     _menu = (
-        '1  : GENERATE KEY',
-        '2  : SET LENGTH [DEFAULT : 32]',
-        '3  : SET CHARACTERS [DEFAULT : ASCII 32/126]',
-        '4  : SET SKIP CHARACTERS ',
-        '5  : SET COUNT MAKE [DEFAULT : 1]',
-        '6  : SET PATH FOR SAVE RESULTS',
-        '0  : EXIT',
-        '-1 : Clear Display. U can Use "cls" or "clear"',
+        '\n\n',
+        '\t1  : GENERATE KEY',
+        '\t2  : SET LENGTH [DEFAULT : 32]',
+        '\t3  : SET CHARACTERS [DEFAULT : ASCII 32/126]',
+        '\t4  : SET SKIP CHARACTERS ',
+        '\t5  : SET COUNT MAKE [DEFAULT : 1]',
+        '\t6  : SET PATH FOR SAVE RESULTS',
+        '\t0  : EXIT',
+        '\t-1 : Clear Display. U can Use "cls" or "clear"',
         '\n\n',
     )
 
@@ -285,7 +288,7 @@ def app_key_gen() -> int:
                 print("FILE SET IS CANCELD")
         elif _inp in ('-1', 'cls', 'clear'):
             _CLEAR()
-            print("KEY GENERATOR [VERSION 0.1]\n\n")
+            print("KEY GENERATOR [VERSION 0.1]")
             print('\n'.join(_menu))
         else:
             print('The Order Not Existed in Valid Order ! [Please Set Number For Command]')
@@ -298,16 +301,16 @@ def app_cipher(_act_cipher: tuple = None) -> int:
     print("CIPHER APP [VERSION 0.1]")
     _menu = (
         "\n\n",
-        "1  : SETUP CIPHER",
-        "2  : INPUT TEXT ENCODE / DECODE",
-        "3  : FILE TEXT ENCODE / DECODE",
-        "4  : INPUT TEXT ONLY NESTED CIPHER ENCODE / DECODE",
-        "5  : FILE TEXT ONLY NESTED CIPHER ENCODE / DECODE",
-        "6  : SET FILE FOR SAVE RESULT",
-        "7  : UPDATE CIPHER",
-        "8  : GENERATE KEY",
-        "0  : Exit.",
-        "-1 : CLear Display. U can Use 'cls' or 'clear'.",
+        "\t1  : SETUP CIPHER.",
+        "\t2  : INPUT TEXT ENCODE / DECODE.",
+        "\t3  : FILE TEXT ENCODE / DECODE.",
+        "\t4  : INPUT TEXT ONLY NESTED CIPHER ENCODE / DECODE.",
+        "\t5  : FILE TEXT ONLY NESTED CIPHER ENCODE / DECODE.",
+        "\t6  : SET FILE FOR SAVE RESULT.",
+        "\t7  : UPDATE CIPHER.",
+        "\t8  : GENERATE KEY.",
+        "\t0  : Exit.",
+        "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         "\n\n",
     )
     if _act_cipher:
@@ -540,12 +543,12 @@ def app_crypto() -> int:
     print("CRYPTO APP [VERSION 0.1]")
     _menu = (
         "\n\n",
-        "1  : INPUT TEXT ENCRYPTING OR DECRYPTING.",
-        "2  : FILE TEXT ENCRYPTING OR DECRYPTING.",
-        "3  : SET KEY.",
-        "4  : SET PATH FOR SAVE RESULT.",
-        "0  : EXIT.",
-        "-1 : CLear Display. U can Use 'cls' or 'clear'.",
+        "\t1  : INPUT TEXT ENCRYPTING OR DECRYPTING.",
+        "\t2  : FILE TEXT ENCRYPTING OR DECRYPTING.",
+        "\t3  : SET KEY.",
+        "\t4  : SET PATH FOR SAVE RESULT.",
+        "\t0  : EXIT.",
+        "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         "\n\n",
     )
 
@@ -627,10 +630,10 @@ def app_update_account(_act_db: tuple = None) -> int:
     print("UPDATE ACCOUNT DATA BASE APP [VERSION 0.1]")
     _menu = (
         "\n\n",
-        "1  : UPDATE ACCOUNT.",
-        "2  : RESET.",
-        "0  : EXIT.",
-        "-1 : CLear Display. U can Use 'cls' or 'clear'.",
+        "\t1  : UPDATE ACCOUNT.",
+        "\t2  : RESET.",
+        "\t0  : EXIT.",
+        "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         "\n\n",
     )
 
@@ -707,12 +710,12 @@ def app_setting(_act_setting: tuple = None) -> int:
     print("SETTING APP [VERSION 0.1]")
     _menu = (
         '\n\n',
-        '1  : ADD OR UPDATE TO SETTING.',
-        '2  : GET FROM SETTING.',
-        '3  : CONNECT TO OTHER SETTING.',
-        '4  : RESET SETTING. [CLEAR SETTING FILE]',
-        '0  : EXIT.',
-        "-1 : CLear Display. U can Use 'cls' or 'clear'.",
+        '\t1  : ADD OR UPDATE TO SETTING.',
+        '\t2  : GET FROM SETTING.',
+        '\t3  : CONNECT TO OTHER SETTING.',
+        '\t4  : RESET SETTING. [CLEAR SETTING FILE]',
+        '\t0  : EXIT.',
+        "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         '\n\n'
     )
     if _act_setting:
@@ -813,17 +816,17 @@ def app_setting(_act_setting: tuple = None) -> int:
 
 # MAIN
 def main() -> int:
-    print("MANAGER APP [VERSION 0.1]")
+    print("MY PASSWORD MANAGER APPLICATION [VERSION 0.1]")
     _menu = (
         "\n\n",
-        "1  : PASSWORD MANAGER.",
-        "2  : KEY GENERATOR.",
-        "3  : TEXT CIPHER.",
-        "4  : TEXT CRYPTO.",
-        "5  : UPDATE ACCOUNT DATABASE.",
-        "6  : CREATE OR UPDATE SETTING PASSWORD MANAGER.",
-        "0  : EXIT.",
-        "-1 : CLear Display. U can Use 'cls' or 'clear'.",
+        "\t1  : PASSWORD MANAGER.",
+        "\t2  : KEY GENERATOR.",
+        "\t3  : TEXT CIPHER.",
+        "\t4  : TEXT CRYPTO.",
+        "\t5  : UPDATE ACCOUNT DATABASE.",
+        "\t6  : CREATE OR UPDATE SETTING PASSWORD MANAGER.",
+        "\t0  : EXIT.",
+        "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         "\n\n",
     )
     print("\n\nSET YOUR SETTING PATH\n\tIF NOT SETTING FILE PRESS [ENTER] FOR SKIP\n\n")
@@ -840,7 +843,7 @@ def main() -> int:
 
     def refresh() -> None:
         _CLEAR()
-        print("MANAGER APP [VERSION 0.1]")
+        print("MY PASSWORD MANAGER APPLICATION [VERSION 0.1]")
         print('\n'.join(_menu))
 
     refresh()
