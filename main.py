@@ -81,4 +81,8 @@ def main(argv: list[str]) -> int:
     return 0
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+    if len(sys.argv) == 1:
+        from app import main as app
+        raise SystemExit(app())
+    else:
+        raise SystemExit(main(sys.argv))
