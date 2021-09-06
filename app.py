@@ -101,6 +101,8 @@ def app_password_manager(_act_db: tuple = None) -> int:
         _password = str(input('PASSWORD /> '))
     _manager.METHOD = _method
     _manager = _manager(_path, _username, _password)
+    _CLEAR()
+    print('PASSWORD MANAGER APP [VERSION 0.1]')
     print(f'\n\t< DATA BASE [{os.path.basename(_path)}] IS ACTIVE >')
     print("\t------------------------------------------------------")
     print('\n'.join(_menu))
@@ -352,6 +354,17 @@ def app_cipher(_act_cipher: tuple = None) -> int:
                     print("NEW CIPHER IS ACTIVE")
                 else:
                     print("CANCELED BY USER")
+            else:
+                print("SETUP NEW CIPHER")
+                _key = str(input("KEY /> [default : 'NONE'] "))
+                _key = None if _key in ('', ' ', None) else _key
+                _method = str(input("METHOD /> [default : 'NONE'] "))
+                _method = None if _method in ('', ' ', None) else _method
+                _key_ci = str(input("CIPHER KEY /> ['0' or '1']~[default : '0'] "))
+                _key_ci = False if _key_ci in ('0', '', ' ', None) else True
+
+                _cls_cipher = my_passwords.Cipher(_key, _method, _key_ci)
+                print("NEW CIPHER IS ACTIVE")
         elif _inp == 2:
             print("INPUT TEXT CIPHER ENCODE / DECODE  [CRYPTING + CIPHER]")
             if _cls_cipher is None:
@@ -394,18 +407,21 @@ def app_cipher(_act_cipher: tuple = None) -> int:
                     _file = os.path.realpath(_path)
                 print("... WORKING ...")
                 _inp_file = os.path.realpath(_inp_file)
-                with open(_inp_file, 'r') as f, open(_file, 'w') as of:
-                    reader = f.read()
+                if os.path.exists(_inp_file):
+                    with open(_inp_file, 'r') as f, open(_file, 'w') as of:
+                        reader = f.read()
 
-                    if _mode == 1:
-                        _cip = _cls_cipher.encode(reader)
-                    elif _mode == 2:
-                        _cip = _cls_cipher.decode(reader)
+                        if _mode == 1:
+                            _cip = _cls_cipher.encode(reader)
+                        elif _mode == 2:
+                            _cip = _cls_cipher.decode(reader)
 
-                    of.write(_cip)
-                f.close()
-                of.close()
-                print(f"RESULT SAVED TO FILE [{_file}]")
+                        of.write(_cip)
+                    f.close()
+                    of.close()
+                    print(f"RESULT SAVED TO FILE [{_file}]")
+                else:
+                    print(f"FILE [{_inp_file}] NOT EXIST")
         elif _inp == 4:
             print("INPUT TEXT NESTED CIPHER ENCODE / DECODE")
             if _cls_cipher is None:
@@ -452,18 +468,21 @@ def app_cipher(_act_cipher: tuple = None) -> int:
                     _file = os.path.realpath(_path)
                 print("... WORKING ...")
                 _inp_file = os.path.realpath(_inp_file)
-                with open(_inp_file, 'r') as f, open(_file, 'w') as of:
-                    reader = f.read()
+                if os.path.exists(_inp_file):
+                    with open(_inp_file, 'r') as f, open(_file, 'w') as of:
+                        reader = f.read()
 
-                    if _mode == 1:
-                        _nci = _cls_cipher.cipher_encode(_method, reader)
-                    elif _mode == 2:
-                        _nci = _cls_cipher.cipher_decode(_method, reader)
+                        if _mode == 1:
+                            _nci = _cls_cipher.cipher_encode(_method, reader)
+                        elif _mode == 2:
+                            _nci = _cls_cipher.cipher_decode(_method, reader)
 
-                    of.write(_nci)
-                f.close()
-                of.close()
-                print(f"RESULT SAVED TO FILE [{_file}]")
+                        of.write(_nci)
+                    f.close()
+                    of.close()
+                    print(f"RESULT SAVED TO FILE [{_file}]")
+                else:
+                    print(f"FILE [{_inp_file}] NOT EXIST")
         elif _inp == 6:
             print("SET FILE FOR SAVE RESULT")
             print("EVERY TIME SAVING RESULT DATA INTO THE FILE IS DELETED")
@@ -486,15 +505,15 @@ def app_cipher(_act_cipher: tuple = None) -> int:
                     _key_ci = False if _key_ci in ('0', '', ' ', None) else True
                     _cls_cipher.update_key(_key, _key_ci)
                     print("KEY IS UPDATED")
-                elif _upd_mode ('2', 'method'):
+                elif _upd_mode in ('2', 'method'):
                     print("UPDATE CIPHER METHOD")
                     _all_method = _cls_cipher.all_method_supports()
                     print(f"ALL CIPHER METHOD SUPPORTS THIS CIPHER -> [{_all_method}]")
                     wrong_name = lambda x: (None, print(f"NO CIPHER METHOD NAMED [{x}] METHOD SET IS 'NONE'"))
-                    check = lambda name: name if name in _all_method else wrong_name()[0]
+                    check = lambda name: name if name in _all_method else wrong_name(name)[0]
                     _method = str(input("METHOD NAME /> [default : 'NONE'] "))
                     _method = None if _method in ('', ' ', None) else check(_method)
-                elif _upd_mode('3', 'both'):
+                elif _upd_mode in ('3', 'both'):
                     print("UPDATE BOTH 'KEY' AND 'METHOD'")
                     print("UPDATE KEY")
                     _key = str(input("NEW KEY /> "))
@@ -507,7 +526,7 @@ def app_cipher(_act_cipher: tuple = None) -> int:
                     _all_method = _cls_cipher.all_method_supports()
                     print(f"ALL CIPHER METHOD SUPPORTS THIS CIPHER -> [{_all_method}]")
                     wrong_name = lambda x: (None, print(f"NO CIPHER METHOD NAMED [{x}] METHOD SET IS 'NONE'"))
-                    check = lambda name: name if name in _all_method else wrong_name()[0]
+                    check = lambda name: name if name in _all_method else wrong_name(name)[0]
                     _method = str(input("METHOD NAME /> [default : 'NONE'] "))
                     _method = None if _method in ('', ' ', None) else check(_method)
                 else:
@@ -816,6 +835,7 @@ def app_setting(_act_setting: tuple = None) -> int:
 
 # MAIN
 def main() -> int:
+    _CLEAR()
     print("MY PASSWORD MANAGER APPLICATION [VERSION 0.1]")
     _menu = (
         "\n\n",
@@ -831,6 +851,8 @@ def main() -> int:
     )
     print("\n\nSET YOUR SETTING PATH\n\tIF NOT SETTING FILE PRESS [ENTER] FOR SKIP\n\n")
     _setting_path = str(input('SETTING PATH /> '))
+    _tmp_setting = os.path.realpath(_setting_path)
+    _setting_path = _tmp_setting if os.path.isfile(_tmp_setting) else None
     if _setting_path not in ('', ' ', None):
         print('SECURE DATA IN SETTING IF NOT SECURED PRESS [ENTER] FOR SKIP [SETTING KEY]')
         _key = str(input('SETTING KEY /> '))
