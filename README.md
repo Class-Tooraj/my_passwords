@@ -10,7 +10,7 @@ Data is Encrypted and Secured With Nested Cipher Based on Base64 URL Safe
 
 **Download Link** *My Passwords* For Windows  **[ EXE FILE ]**
 
-[Download My Passwords]: https://www.mediafire.com/file/06rp1gpn7rakylp/MyPasswords_v0.1.zip/file	"My Passwords Application"
+https://www.mediafire.com/file/06rp1gpn7rakylp/MyPasswords_v0.1.zip/file 
 
 ---
 
