@@ -749,6 +749,8 @@ def app_setting(_act_setting: tuple = None) -> int:
 
     _setting = Setting(_path, _key, _method)
 
+    _CLEAR()
+    print("SETTING APP [VERSION 0.1]")
     print('\n'.join(_menu))
     _running = True
     while _running:
