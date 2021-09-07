@@ -197,6 +197,293 @@ Thank You Dear
 
 ---
 
+### KEY GENERATOR
 
+Simple Key Generator
+
+```bash
+KEY GENERATOR [VERSION 0.1]
+
+        1  : GENERATE KEY
+        2  : SET LENGTH [DEFAULT : 32]
+        3  : SET CHARACTERS [DEFAULT : ASCII 32/126]
+        4  : SET SKIP CHARACTERS
+        5  : SET COUNT MAKE [DEFAULT : 1]
+        6  : SET PATH FOR SAVE RESULTS
+        0  : EXIT
+        -1 : Clear Display. U can Use "cls" or "clear"
+
+-- />
+```
+
+**Option Key Generator**
+
+> **KEY LENGTH**   NUMBER   **[ 2 ]**
+>
+> > Default Length is **32**
+>
+> **VALID CHARACTER**  NUMBER  **[ 3 ]**
+>
+> > Default Character is **ASCII - 32 / 126** 
+>
+> **SKIP CHARACTER**  NUMBER  **[ 4 ]**
+>
+> **MAKING KEY COUNTER**  NUMBER **[ 5 ]**
+>
+> > Default Counter Making Key is  **1**
+>
+> **SET PATH FOR SAVING RESULT**  NUMBER **[ 6 ]**
+>
+> > Default File Result is **Result Show in Console**
+
+After Setup Your Setting Use **[ 1 ]** For Generate Key Is Start
+
+---
+
+### TEXT CIPHER
+
+Simple Cipher Text This App Supports Encrypt / Decrypt Method - Based on **nested_cipher**
+
+```bash
+CIPHER APP [VERSION 0.1]
+
+        1  : SETUP CIPHER.
+        2  : INPUT TEXT ENCODE / DECODE.
+        3  : FILE TEXT ENCODE / DECODE.
+        4  : INPUT TEXT ONLY NESTED CIPHER ENCODE / DECODE.
+        5  : FILE TEXT ONLY NESTED CIPHER ENCODE / DECODE.
+        6  : SET FILE FOR SAVE RESULT.
+        7  : UPDATE CIPHER.
+        8  : GENERATE KEY.
+        0  : Exit.
+        -1 : CLear Display. U can Use 'cls' or 'clear'.
+
+-- />
+```
+
+First Must Setup Cipher For Active Cipher Use **[ 1 ]** for setup Cipher
+
+```bash
+
+-- /> 1
+SETUP CIPHER
+SETUP NEW CIPHER
+KEY /> [default : 'NONE']
+```
+
+For Encrypt or Decrypt Use Key Other Wise Press **ENTER** for Skip & Continue
+
+```bash
+
+-- /> 1
+SETUP CIPHER
+SETUP NEW CIPHER
+KEY /> [default : 'NONE']
+METHOD /> [default : 'NONE']
+```
+
+Chose **nested_cipher** Method other wise Press **ENTER** for skip this & Set Method **rmb64**
+
+> **All Method Supports**
+>
+> > **b64 - ab64 - mb64 - eb64 - lb64 - rb64 - rab64 - rmb64 - reb64 - rlb64**
+
+```bas
+
+-- /> 1
+SETUP CIPHER
+SETUP NEW CIPHER
+KEY /> [default : 'NONE']
+METHOD /> [default : 'NONE']
+CIPHER KEY /> ['0' or '1']~[default : '0']
+```
+
+Set Cipher Key  **"0"** means **False** and **"1"** means **True**
+
+if **1** means Your **Key** Cipher With Before Use and Other Wise **Key** is **Raw Key**
+
+```bash
+
+-- /> 1
+SETUP CIPHER
+SETUP NEW CIPHER
+KEY /> [default : 'NONE']
+METHOD /> [default : 'NONE']
+CIPHER KEY /> ['0' or '1']~[default : '0']
+NEW CIPHER IS ACTIVE
+-- />
+```
+
+Now Cipher Setup Is Done And Cipher Active For Work Chose Order For **ENCODE / DECODE** Your Text or Text File
+
+---
+
+### TEXT CRYPTO
+
+Simple Encrypt or Decrypt Text Encoding **UTF8**
+
+```bash
+CRYPTO APP [VERSION 0.1]
+
+        1  : INPUT TEXT ENCRYPTING OR DECRYPTING.
+        2  : FILE TEXT ENCRYPTING OR DECRYPTING.
+        3  : SET KEY.
+        4  : SET PATH FOR SAVE RESULT.
+        0  : EXIT.
+        -1 : CLear Display. U can Use 'cls' or 'clear'.
+
+-- />
+```
+
+for Set Key Use **3** Other Wise Every Time U Want To Encrypt or Decrypt Must Type Key
+
+---
+
+### UPDATE ACCOUNT DATABASE
+
+For Change User Name & Password & Method Set in Data Base Use This App
+
+*Attention This App Can not Change Setting Data For Change Setting Data Must Update Setting Manually* 
+
+```bash
+UPDATE ACCOUNT DATA BASE APP [VERSION 0.1]
+
+        1  : UPDATE ACCOUNT.
+        2  : RESET.
+        0  : EXIT.
+        -1 : CLear Display. U can Use 'cls' or 'clear'.
+
+-- />
+```
+
+Type **1** For Update Data Base Account
+
+```bash
+
+-- /> 1
+UPDATE ACCOUNT
+SET DATA BASE PATH AND ACCOUNT DATA
+DATA BASE [PATH] />
+```
+
+Set Data Base File Path
+
+```bash
+-- /> 1
+UPDATE ACCOUNT
+SET DATA BASE PATH AND ACCOUNT DATA
+DATA BASE [PATH] /> ./my_db.mps
+DATA BASE [USER NAME] /> my_username
+DATA BASE [PASSWORD] /> MyPassword
+DATA BASE [CIPHER METHOD] /> mb64
+```
+
+Set User Name & Password & Method For Connect To Data Base
+
+```bash
+SETTED DATA BASE FILE AND ACCOUNT DATA
+SET NEW ACCOUNT DATA
+ONLY 'PASSWORD' MUST BE CHANGED 'USER NAME' AND 'METHOD' IS OPTIONAL FO CHANGE
+NEW USER NAME /> [default 'my_username']
+```
+
+Now Must Set **New** Data Only **Password** Must Be Change Other **User Name & Method** Optional For Update
+
+```bash
+SETTED DATA BASE FILE AND ACCOUNT DATA
+SET NEW ACCOUNT DATA
+ONLY 'PASSWORD' MUST BE CHANGED 'USER NAME' AND 'METHOD' IS OPTIONAL FO CHANGE
+NEW USER NAME /> [default 'my_username']
+NEW PASSWORD /> NewPassword
+NEW METHOD /> [default 'mb64']
+```
+
+After Set Your New Data Question If Ready Type **Y - y** for Update Account Is Start
+
+```bash
+DATA BASE NEW ACCOUNT IS SETTED
+ARE U READY /> [default : 'N'] y
+```
+
+  Wait For Update Account Is Done
+
+---
+
+### CREATE OR UPDATE SETTING PASSWORD MANAGER
+
+Frist Set Setting Path if File Not Exist App Created The File
+
+```bash
+SETTING APP [VERSION 0.1]
+SETTING PATH />
+```
+
+Then If Want To Secure Data Type Key and Method
+
+```bash
+SETTING APP [VERSION 0.1]
+SETTING PATH /> ./test/tdb/setting.sjson
+SETTING KEY /> [default : No Secure] mykey
+SETTING METHOD /> [default : mb64] 
+```
+
+Now Connect The Setting Add New Data For Created Setting And Put Data Into The Setting
+
+```bash
+SETTING APP [VERSION 0.1]
+
+        1  : ADD OR UPDATE TO SETTING.
+        2  : GET FROM SETTING.
+        3  : CONNECT TO OTHER SETTING.
+        4  : RESET SETTING. [CLEAR SETTING FILE]
+        0  : EXIT.
+        -1 : CLear Display. U can Use 'cls' or 'clear'.
+
+-- />
+```
+
+Add or Update
+
+```bash
+
+-- /> 1
+ADD DATA TO SETTING
+NAME />
+```
+
+Type This Data Name
+
+```bash
+
+-- /> 1
+ADD DATA TO SETTING
+NAME /> db_data
+DB FILE PATH /> ./my_database.mps
+METHOD SECURE DB /> mb64
+DB USER NAME /> my_username
+DB PASSWORD /> MyPassword
+```
+
+After Type Name Type Other Data Base Data **Path - Cipher Method - User Name - Password**
+
+```bash
+
+-- /> 1
+ADD DATA TO SETTING
+NAME /> db_data
+DB FILE PATH /> ./test/tdb/mdb.mps
+METHOD SECURE DB /> mb64
+DB USER NAME /> my_username
+DB PASSWORD /> MyPassword
+DATA [db_data] ADDED TO SETTING
+```
+
+ Data Added To Setting Now You Can Use This Setting For Life Easier Use My Password Application
+
+---
+
+Tank You 
+
+---
 
 author: **Tooraj Jahangiri** version: **0.1**
