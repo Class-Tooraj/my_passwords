@@ -71,6 +71,31 @@ class Setting:
 
         return get
 
+def about_info() -> str:
+    _show = (
+        "\tABOUT MY PASSWORDS\n",
+        "\t---------------------------------------------------------",
+        "\tSOURCE 'https://github.com/Class-Tooraj/my_passwords'",
+        "\t---------------------------------------------------------",
+        "\n",
+        "\tVERSION CLI APP '0.1'",
+        "\tVERSION PASSWORD MANAGER '0.2'",
+        "\tVERSION CIPHER '0.1'",
+        "\tVERSION KEY GENERATOR (KEY MAKER) '0.2'",
+        "\tVERSION CRYPTO '0.3'",
+        "\tVERSION UPDATE ACCOUNT (ACCOUNT UPDATE) '0.2'",
+        "\n",
+        "\t---------------------------------------------------------",
+        "\tPYTHON 3 - SQLITE 3 - NESTED CIPHER 0.3",
+        "\t---------------------------------------------------------",
+        "\n",
+        "\tAUTHOR 'TOORAJ JAHANGIRI'",
+        "\tEMAIL 'toorajjahangiri@gmail.com'",
+        "\n\n"
+    )
+
+    return '\n'.join(_show)
+
 # CONSOLE APP CODE
 def app_password_manager(_act_db: tuple = None) -> int:
     _CLEAR()
@@ -847,6 +872,7 @@ def main() -> int:
         "\t4  : TEXT CRYPTO.",
         "\t5  : UPDATE ACCOUNT DATABASE.",
         "\t6  : CREATE OR UPDATE SETTING PASSWORD MANAGER.",
+        "\t7  : ABOUT.",
         "\t0  : EXIT.",
         "\t-1 : CLear Display. U can Use 'cls' or 'clear'.",
         "\n\n",
@@ -917,6 +943,12 @@ def main() -> int:
             print(f'SETTING IS CLOSED / [{_app_setting}]')
             refresh()
         elif _inp in ('-1', 'cls', 'clear'):
+            refresh()
+        elif _inp == 7:
+            _CLEAR()
+            about = about_info()
+            print(about)
+            input("\tPRESS [ENTER]")
             refresh()
         else:
             print('The Order Not Existed in Valid Order ! [Please Set Number For Command]')
